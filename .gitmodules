@@ -1,3 +1,6 @@
 [submodule "cblastest"]
 	path = cblastest
 	url = https://github.com/csukuangfj/blas-lapack-in-c-cplusplus
+[submodule "python_example"]
+	path = python_example
+	url = https://github.com/tomiock/python_example
