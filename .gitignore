@@ -1,2 +1,7 @@
 # visual studio code
 .vscode
+.mycblastest/CMakeFiles
+.mycblastest/CMakeCache.txt
+.mycblastest/cmake_install.cmake
+.mycblastest/Makefile
+
