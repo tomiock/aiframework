@@ -1,7 +1,9 @@
 #define PY_SSIZE_T_CLEAN
-#include </usr/include/python3.10/Python.h>
-#include </usr/include/python3.10/structmember.h>
+#include </home/tomiock/anaconda3/envs/latest/include/python3.12/Python.h>
+#include </home/tomiock/anaconda3/envs/latest/include/python3.12/structmember.h>
 #include "point_test.h"
+#include <stdio.h>
+#include <stddef.h>
 
 /*
  typedef struct point Point;
@@ -10,6 +12,12 @@ struct point {
 	int x;
 	int y;
 };
+
+there may be a very big problem with the types.
+if we define a custom object the type that we get a compile time is PyObject
+however, we want to work with the C types instead.
+
+this is not true for every single case, but it is true for the most part.
 */
 
 static void
@@ -28,6 +36,8 @@ Point_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
 	self->x = 0;
 	self->y = 0;
 
+	printf("Point_new\n");
+
 	return (PyObject*)self;
 }
 
@@ -36,28 +46,25 @@ static int
 Point_init(Point *self, PyObject *args, PyObject *kwds) {
 	static char *kwlist[] = {"x", "y", NULL};
 	PyObject *x = NULL, *y = NULL;
+
+	printf("Point_init INIT\n");
 	
 	// |ii means that x and y are optional and must be integers
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|ii", kwlist, &x, &y))
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "ii", kwlist, &x, &y))
 		return -1;
+	// TODO: see the notation and check if we want optional arguments
+	
+	printf("\n");
 
 	if (x) {
-		if (PyLong_Check(x)) {
-			self->x = PyLong_AsLong(x);
-		} else {
-			PyErr_SetString(PyExc_TypeError, "x must be an integer");
-			return -1;
-		}
+		Py_SETREF(self->x, Py_NewRef(x));
 	}
 
 	if (y) {
-		if (PyLong_Check(y)) {
-			self->y = PyLong_AsLong(y);
-		} else {
-			PyErr_SetString(PyExc_TypeError, "y must be an integer");
-			return -1;
-		}
+		Py_SETREF(self->y, Py_NewRef(y));
 	}
+
+	printf("Point_init END\n");
 
 	return 0;
 }
@@ -119,6 +126,10 @@ PyInit_aiframework(void) {
 	Py_INCREF(&PointType);
 	// the string that is on this functions is the name of the PyObject implemented
 	// "from ai import Point" must be used
-	PyModule_AddObject(m, "Point", (PyObject *)&PointType);
+	if (PyModule_AddObject(m, "Point", (PyObject *)&PointType) < 0) {
+		Py_DECREF(&PointType);
+		Py_DECREF(m);
+		return NULL;
+	}
 	return m;
 }
