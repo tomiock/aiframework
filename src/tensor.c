@@ -6,15 +6,19 @@ typedef struct {
 	unsigned short shape; // restricted to 3D tensor at the moment
 	unsigned short stride;
 	char type;
-	float data;
+	float data[];
 }
 Tensor;
 
 
-void tensor_alloc(Tensor* t, char* dim, unsigned short* shape, unsigned short* stride, char *type, float data[])
+void tensor_alloc(Tensor* t, char* dim, unsigned short* shape, unsigned short* stride, char *type, float* data_array )
 /* initializes the tensor with the given data, shape and dim 
  does the memory allocation of the whole tensor */
 {
+	t->dim = *dim;
+	t->shape = *shape;
+	t->stride = *stride;
+	t->type = *type;
 }
 
 Tensor* tensor_create(char dim, unsigned short shape[], float data[])
@@ -35,6 +39,7 @@ Tensor* tensor_create(char dim, unsigned short shape[], float data[])
 
 	size_data = sizeof(float)*num_elements;
 
+	data = (float*)malloc(size_data);
 
 	// allocation of the necessary memory
 	tensor_alloc(t, &dim, shape, &stride, &type, data);
@@ -52,16 +57,39 @@ int main(){
 
 	Tensor* tensor_ptr = tensor_create(dim, shape, data);
 
+	// print the data to make a test
+	for (int i = 0; i < 9; i++){
+		printf("%f ", data[i]);
+	}
+
+	printf("\n");
+
 	char tensor_d = tensor_ptr->dim;
 	unsigned short tensor_shape = tensor_ptr->shape;
 	unsigned short tensor_stride = tensor_ptr->stride;
 	char tensor_type = tensor_ptr->type;
-	float tensor_data = tensor_ptr->data;
+	float *tensor_data = tensor_ptr->data;
 
 	unsigned short total_elements = tensor_shape*tensor_shape;
 
 	printf("%s", "Tensor dim: ");
 	printf("%d\n", tensor_d);
+	printf("%s", "Tensor shape: ");
+	printf("%d\n", tensor_shape);
+	printf("%s", "Tensor stride: ");
+	printf("%d\n", tensor_stride);
+	printf("%s", "Tensor type: ");
+	printf("%d\n", tensor_type);
+
+	if (tensor_data == NULL){
+		printf("%s", "Tensor data is NULL");
+		return 1;
+	}
+
+	// printf("%s", "Tensor data: ");
+	// for (int i = 0; i < total_elements; i++){
+	// 	printf("%f ", tensor_data[i]);
+	// }
 
 	return 0;
 }
