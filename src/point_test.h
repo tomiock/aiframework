@@ -9,9 +9,9 @@ typedef struct point Point;
 Point* point_init(int x, int y);
 
 struct point {
-    PyObject_HEAD
-    PyObject* x;
-    PyObject* y;
+    int x;
+    int y;
+    long z;
 };
 
 /*

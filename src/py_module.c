@@ -1,5 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include </home/tomiock/anaconda3/envs/latest/include/python3.12/Python.h>
+#include </home/tomiock/anaconda3/envs/latest/include/python3.12/object.h>
 #include </home/tomiock/anaconda3/envs/latest/include/python3.12/structmember.h>
 #include "point_test.h"
 #include <stdio.h>
@@ -22,8 +23,8 @@ this is not true for every single case, but it is true for the most part.
 
 static void
 Point_dealloc(Point* self) {
-	Py_XDECREF(self->x);
-	Py_XDECREF(self->y);
+	Py_XDECREF(PyLong_FromLong(self->x));
+	Py_XDECREF(PyLong_FromLong(self->y));
 	Py_TYPE(self)->tp_free((PyObject *)self);
 }
 
@@ -50,21 +51,13 @@ Point_init(Point *self, PyObject *args, PyObject *kwds) {
 	printf("Point_init INIT\n");
 	
 	// |ii means that x and y are optional and must be integers
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "ii", kwlist, &x, &y))
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|ii", kwlist, &self->x, &self->y))
 		return -1;
-	// TODO: see the notation and check if we want optional arguments
+	// TODO: see the notation and check if optional parameters are needed
 	
-	printf("\n");
-
-	if (x) {
-		Py_SETREF(self->x, Py_NewRef(x));
-	}
-
-	if (y) {
-		Py_SETREF(self->y, Py_NewRef(y));
-	}
-
 	printf("Point_init END\n");
+	printf("x: %d\n", self->x);
+	printf("y: %d\n", self->y); // OKAY (1,1)
 
 	return 0;
 }
@@ -79,6 +72,9 @@ static struct PyMemberDef Point_members[] = {
 
 static PyObject*
 Point_repr(Point *self) {
+	printf("Point_repr\n"); // NOT OKAY!!!!
+	printf("x: %d\n", self->x);
+	printf("y: %d\n", self->y);
 	return PyUnicode_FromFormat("Point(%d, %d)", self->x, self->y);
 }
 
@@ -89,11 +85,11 @@ static PyMethodDef Point_methods[] = {
 
 
 static PyTypeObject PointType = {
-	.ob_base = PyVarObject_HEAD_INIT(NULL, 0)
+    .ob_base = PyVarObject_HEAD_INIT(NULL, 0) // there is no comma here !!!
 	.tp_name = "aiframework.Point",
 	.tp_basicsize = sizeof(Point),
 	.tp_itemsize = 0,
-	.tp_flags = Py_TPFLAGS_DEFAULT,
+	.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
 	.tp_doc = "Just a 2D point",
 	.tp_new = Point_new,
 	.tp_init = (initproc)Point_init,
