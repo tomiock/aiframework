@@ -6,20 +6,9 @@ typedef struct {
 	unsigned short shape; // restricted to 3D tensor at the moment
 	unsigned short stride;
 	char type;
-	float data[];
-}
-Tensor;
+	float* data;
+} Tensor;
 
-
-void tensor_alloc(Tensor* t, char* dim, unsigned short* shape, unsigned short* stride, char *type, float* data_array )
-/* initializes the tensor with the given data, shape and dim 
- does the memory allocation of the whole tensor */
-{
-	t->dim = *dim;
-	t->shape = *shape;
-	t->stride = *stride;
-	t->type = *type;
-}
 
 Tensor* tensor_create(char dim, unsigned short shape[], float data[])
 /* creates the variables of the tensor and calls tensor_alloc to initialize the tensor
@@ -31,6 +20,10 @@ Tensor* tensor_create(char dim, unsigned short shape[], float data[])
 	unsigned short stride = sizeof(float)*shape[0];
 	unsigned short size_data;
 	unsigned short num_elements;
+
+	if(t == NULL){
+		return NULL;
+	}
 	
 	char i;
 	while (i<dim){
@@ -39,23 +32,30 @@ Tensor* tensor_create(char dim, unsigned short shape[], float data[])
 
 	size_data = sizeof(float)*num_elements;
 
-	data = (float*)malloc(size_data);
+	t->dim = dim;
+	t->shape = *shape;
+	t->stride = stride;
+	t->type = type;
+	t->data = data;
 
-	// allocation of the necessary memory
-	tensor_alloc(t, &dim, shape, &stride, &type, data);
-	// shape and data are passed normally bc it is an array
-    
 	// fill in the struct
 	return t;
 }
 
 
 int main(){
+	printf("%s", "Hello World\n");
 	float data[9] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 	unsigned short shape[3] = {3, 3};
 	char dim = 2;
 
 	Tensor* tensor_ptr = tensor_create(dim, shape, data);
+
+	// check if the tensor is NULL
+	if (tensor_ptr == NULL){
+		printf("%s", "Tensor is NULL");
+		return 1;
+	}
 
 	// print the data to make a test
 	for (int i = 0; i < 9; i++){
@@ -86,10 +86,11 @@ int main(){
 		return 1;
 	}
 
-	// printf("%s", "Tensor data: ");
-	// for (int i = 0; i < total_elements; i++){
-	// 	printf("%f ", tensor_data[i]);
-	// }
+	printf("\n");
+	printf("%s", "Tensor data: ");
+	for (int i = 0; i < total_elements; i++){
+		printf("%f ", tensor_data[i]);
+	}
 
 	return 0;
 }
