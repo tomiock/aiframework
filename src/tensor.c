@@ -18,20 +18,11 @@ Tensor* tensor_create(char dim, unsigned short shape[], float data[])
 
 	Tensor* t = (Tensor*)malloc(sizeof(Tensor));
 	unsigned short stride = sizeof(float)*shape[0];
-	unsigned short size_data;
-	unsigned short num_elements;
 
 	if(t == NULL){
 		return NULL;
 	}
 	
-	char i;
-	while (i<dim){
-		num_elements*=shape[i];
-	}
-
-	size_data = sizeof(float)*num_elements;
-
 	t->dim = dim;
 	t->shape = *shape;
 	t->stride = stride;
@@ -91,6 +82,8 @@ int main(){
 	for (int i = 0; i < total_elements; i++){
 		printf("%f ", tensor_data[i]);
 	}
+
+	free(tensor_ptr);
 
 	return 0;
 }
