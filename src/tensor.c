@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <cblas.h>
 #include <stdlib.h>
 
 typedef struct {
@@ -32,6 +33,30 @@ Tensor* tensor_create(char dim, unsigned short shape[], float data[])
 	// fill in the struct
 	return t;
 }
+
+Tensor* xSCAL(Tensor* t, float alpha) {
+	Tensor *result = (Tensor*)malloc(sizeof(Tensor));
+
+	if (result == NULL){
+		return NULL;
+	}
+
+	result->dim = t->dim;
+	result->shape = t->shape;
+	result->stride = t->stride;
+	result->type = t->type;
+	result->data = (float*)malloc(sizeof(t->data));
+
+	for (int j = 0; j < t->dim; j++){
+		printf("j: %d\n", j);
+		for (int i = 0; i < t->shape*t->shape; i++){
+			printf("i: %d\n", i);
+			result->data[i] = alpha*t->data[i];
+		}
+	}
+
+	return result;
+}	
 
 
 int main(){
@@ -81,6 +106,14 @@ int main(){
 	printf("%s", "Tensor data: ");
 	for (int i = 0; i < total_elements; i++){
 		printf("%f ", tensor_data[i]);
+	}
+
+	printf("\n");
+	printf("%s", "Tensor data after scaling:\n");
+	Tensor result = *xSCAL(tensor_ptr, 2);
+
+	for (int i = 0; i < total_elements; i++){
+		printf("%f ", result.data[i]);
 	}
 
 	free(tensor_ptr);
