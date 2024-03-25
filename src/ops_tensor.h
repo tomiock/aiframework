@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "tensor.h"
 
 Tensor* xSCAL(Tensor* t, float alpha) {
 	Tensor *result = (Tensor*)malloc(sizeof(Tensor));
