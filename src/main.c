@@ -3,10 +3,8 @@
 #include "tensor.h"
 #include "ops_tensor.h"
 
-
 int main(){
-	printf("%s", "Hello World\n");
-	float data[9] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+	float data[9] = {0, 1, 2, 3, 4, 5, 6, 7, 18};
 	unsigned short shape[3] = {3, 3};
 	char dim = 2;
 
@@ -55,10 +53,10 @@ int main(){
 
 	printf("\n");
 	printf("%s", "Tensor data after scaling:\n");
-	Tensor result = *xSCAL(tensor_ptr, 2);
+	xSCAL(tensor_ptr, 2);
 
 	for (int i = 0; i < total_elements; i++){
-		printf("%f ", result.data[i]);
+		printf("%f ", tensor_ptr->data[i]);
 	}
 
 	free(tensor_ptr);

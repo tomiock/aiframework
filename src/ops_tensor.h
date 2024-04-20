@@ -1,24 +1,14 @@
-#include <stdlib.h>
+#ifndef OPS_TENSOR_H_   /* Include guard */
+#define OPS_TENSOR_H_
+
 #include "tensor.h"
 
-Tensor* xSCAL(Tensor* t, float alpha) {
-	Tensor *result = (Tensor*)malloc(sizeof(Tensor));
+void xSCAL(Tensor* A, float alpha);
 
-	if (result == NULL){
-		return NULL;
-	}
+void xSWAP (Tensor *tensor1, Tensor *tensor2);
 
-	result->dim = t->dim;
-	result->shape = t->shape;
-	result->stride = t->stride;
-	result->type = t->type;
-	result->data = (float*)malloc(sizeof(t->data));
+Tensor * xCOPY (Tensor *tensor1);
 
-	for (int j = 0; j < t->dim; j++){
-		for (int i = 0; i < t->shape*t->shape; i++){
-			result->data[i] = alpha*t->data[i];
-		}
-	}
+float xDOT (Tensor *tensor1, Tensor *tensor2);
 
-	return result;
-}	
+#endif // OPS_TENSOR_H_
