@@ -117,9 +117,15 @@ float xDOT(Tensor *tensor1, Tensor *tensor2) {
   float result = 0;
 
   // check if the tensors are compatible (same shape and dim)
+<<<<<<< HEAD
   //assert(tensor1->dim == 1); // only 1D tensors are allowed
   //assert(tensor1->dim == tensor2->dim);
   //assert(tensor1->shape == tensor2->shape);
+=======
+  assert(tensor1->dim == 1); // only 1D tensors are allowed
+  assert(tensor1->dim == tensor2->dim);
+  assert(tensor1->shape == tensor2->shape);
+>>>>>>> 3285d66 (many changes)
 
   for (int i = 0; i < tensor1->shape[0]; i++) {
     result += tensor1->data[i] * tensor2->data[i];

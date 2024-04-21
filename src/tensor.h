@@ -7,7 +7,11 @@ extern "C" {
 
 typedef struct {
 	char dim;
+<<<<<<< HEAD
 	unsigned short* shape;
+=======
+	unsigned short* shape; // restricted to 3D tensor at the moment
+>>>>>>> 3285d66 (many changes)
 	unsigned short stride;
 	char type;
 	float* data;
