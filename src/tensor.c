@@ -18,7 +18,7 @@ Tensor* tensor_create(char dim, unsigned short shape[], float data[])
 
 	// fill in the struct
 	t->dim = dim;
-	t->shape = *shape;
+	t->shape = shape;
 	t->stride = stride;
 	t->type = type;
 	t->data = data;
