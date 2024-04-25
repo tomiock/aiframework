@@ -11,7 +11,6 @@ Point* point_init(int x, int y);
 struct point {
     int x;
     int y;
-    long z;
 };
 
 /*
